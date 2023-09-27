@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import base64
 from PIL import Image
-from numerize.numerize import numerize
+# from numerize.numerize import numerize
 
 
 
@@ -98,13 +98,13 @@ if uploaded_files:
               
             col1, col2, col3, col4 = st.columns(4)      
             with col1:
-                st.metric(label='Total', value=f"{numerize(TotalSales)}")
+                st.metric(label='Total', value=f"{(TotalSales)}")
             with col2:
                 st.metric(label="Average Discount",value=f"{round(AverageDiscount,1)}")
             with col3:
-                st.metric(label='Total Quantity',value=numerize(TotalQuantity))
+                st.metric(label='Total Quantity',value=(TotalQuantity))
             with col4:
-                st.metric(label='Total Profit',value=numerize(TotalProfit))
+                st.metric(label='Total Profit',value=(TotalProfit))
                 
             graph1, graph2 = st.columns(2)
             df_grouped = df_selection.groupby(by=["Order_Date"], as_index=False)[['Sales', 'Profit']].sum()
