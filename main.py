@@ -47,9 +47,9 @@ st.sidebar.image(tuguIcon)
 
 uploaded_files = st.sidebar.file_uploader("Choose file", type="xlsx")
 @st.cache_data(ttl=(60*60*24))
-def get_data_from_excel(uploaded_file):
+def get_data_from_excel(uploaded_files):
     df = pd.read_excel(
-        io=uploaded_file,
+        io=uploaded_files,
         # engine="openpyxl",
         # sheet_name="Sales",
         # skiprows=3,
@@ -85,40 +85,38 @@ def sidebarFilter(uploaded_files):
     )
     return df_selection
 
-
-    
 if uploaded_files:
-        if uploaded_files is not None:
-            df_selection = sidebarFilter(uploaded_files)
-            TotalSales = float(df_selection['Sales'].sum())
-            AverageDiscount = float(df_selection['Discount'].mean())
-            TotalQuantity = float(df_selection['Quantity'].sum())
-            TotalProfit = float(df_selection['Profit'].sum())
-              
-            col1, col2, col3, col4 = st.columns(4)      
-            with col1:
-                st.metric(label='Total', value=f"{(TotalSales)}")
-            with col2:
-                st.metric(label="Average Discount",value=f"{round(AverageDiscount,1)}")
-            with col3:
-                st.metric(label='Total Quantity',value=(TotalQuantity))
-            with col4:
-                st.metric(label='Total Profit',value=(TotalProfit))
-                
-            graph1, graph2 = st.columns(2)
-            df_grouped = df_selection.groupby(by=["Order_Date"], as_index=False)[['Sales', 'Profit']].sum()
-            with graph1:
-                st.line_chart(df_grouped, x = 'Order_Date', y = "Sales", height=400)
-            with graph2:
-                df_Month = df_selection.groupby(["Month"], as_index=False)[["Sales", "Profit"]].sum()
-                month_order = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-                df_Month['Month'] = pd.Categorical(df_Month['Month'], categories=month_order, ordered=True)
-                df_Month = df_Month.sort_values('Month')
-                st.bar_chart(df_Month, x = 'Month', y = "Sales", height=400)
-                
+    uploaded_files = get_data_from_excel(uploaded_files)
+    df_selection = sidebarFilter(uploaded_files)
+    TotalSales = float(df_selection['Sales'].sum())
+    AverageDiscount = float(df_selection['Discount'].mean())
+    TotalQuantity = float(df_selection['Quantity'].sum())
+    TotalProfit = float(df_selection['Profit'].sum())
+        
+    col1, col2, col3, col4 = st.columns(4)      
+    with col1:
+        st.metric(label='Total', value=f"{(TotalSales)}")
+    with col2:
+        st.metric(label="Average Discount",value=f"{round(AverageDiscount,1)}")
+    with col3:
+        st.metric(label='Total Quantity',value=(TotalQuantity))
+    with col4:
+        st.metric(label='Total Profit',value=(TotalProfit))
+        
+    graph1, graph2 = st.columns(2)
+    df_grouped = df_selection.groupby(by=["Order_Date"], as_index=False)[['Sales', 'Profit']].sum()
+    with graph1:
+        st.line_chart(df_grouped, x = 'Order_Date', y = "Sales", height=400)
+    with graph2:
+        df_Month = df_selection.groupby(["Month"], as_index=False)[["Sales", "Profit"]].sum()
+        month_order = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        df_Month['Month'] = pd.Categorical(df_Month['Month'], categories=month_order, ordered=True)
+        df_Month = df_Month.sort_values('Month')
+        st.bar_chart(df_Month, x = 'Month', y = "Sales", height=400)
+        
 
-            st.dataframe(df_selection)
-            
+    st.dataframe(df_selection)
+    
 else:
     add_bg_from_local('images/UGM.png')
-            
+    
