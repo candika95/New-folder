@@ -50,7 +50,7 @@ uploaded_files = st.sidebar.file_uploader("Choose file", type="xlsx", accept_mul
 def get_data_from_excel(uploaded_file):
     df = pd.read_excel(
         io=uploaded_file,
-        engine="openpyxl",
+        # engine="openpyxl",
         # sheet_name="Sales",
         # skiprows=3,
         # usecols="B:R",
