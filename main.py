@@ -45,7 +45,7 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 
 st.sidebar.image(tuguIcon)
 
-uploaded_files = st.sidebar.file_uploader("Choose file", type="xlsx", accept_multiple_files = True)
+uploaded_files = st.sidebar.file_uploader("Choose file", type="xlsx")
 @st.cache_data(ttl=(60*60*24))
 def get_data_from_excel(uploaded_file):
     df = pd.read_excel(
@@ -63,24 +63,24 @@ def get_data_from_excel(uploaded_file):
 
 
 
-def sidebarFilter(merged_df):
+def sidebarFilter(uploaded_files):
     st.sidebar.header("Please Filter Here:")
     segment = st.sidebar.multiselect(
                 "Select the Segment:",
-                options=merged_df["Segment"].unique(),
-                default=merged_df["Segment"].unique()
+                options=uploaded_files["Segment"].unique(),
+                default=uploaded_files["Segment"].unique()
     )
     region = st.sidebar.multiselect(
                 "Select the Region:",
-                options=merged_df["Region"].unique(),
-                default=merged_df["Region"].unique(),
+                options=uploaded_files["Region"].unique(),
+                default=uploaded_files["Region"].unique(),
     )
     ship_mode = st.sidebar.multiselect(
                 "Select the Ship Mode:",
-                options=merged_df["Ship_Mode"].unique(),
-                default=merged_df["Ship_Mode"].unique()
+                options=uploaded_files["Ship_Mode"].unique(),
+                default=uploaded_files["Ship_Mode"].unique()
     )
-    df_selection = merged_df.query(
+    df_selection = uploaded_files.query(
                 "Segment == @segment & Region == @region & Ship_Mode == @ship_mode"
     )
     return df_selection
@@ -88,9 +88,8 @@ def sidebarFilter(merged_df):
 
     
 if uploaded_files:
-        merged_df = pd.concat([get_data_from_excel(file) for file in uploaded_files], ignore_index=True)
-        if merged_df is not None:
-            df_selection = sidebarFilter(merged_df)
+        if uploaded_files is not None:
+            df_selection = sidebarFilter(uploaded_files)
             TotalSales = float(df_selection['Sales'].sum())
             AverageDiscount = float(df_selection['Discount'].mean())
             TotalQuantity = float(df_selection['Quantity'].sum())
