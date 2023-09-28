@@ -1,7 +1,0 @@
-numerize
-openpyxl
-pandas
-plotly
-plotly-express
-streamlit==1.2.0
-
