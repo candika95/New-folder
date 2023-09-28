@@ -79,8 +79,8 @@ def sidebarFilter(uploaded_files):
     return df_selection
 
 if uploaded_files:
-    uploaded_files = get_data_from_excel(uploaded_files)
-    df_selection = sidebarFilter(uploaded_files)
+    uploaded_file = get_data_from_excel(uploaded_files)
+    df_selection = sidebarFilter(uploaded_file)
     TotalSales = float(df_selection['Sales'].sum())
     AverageDiscount = float(df_selection['Discount'].mean())
     TotalQuantity = float(df_selection['Quantity'].sum())
