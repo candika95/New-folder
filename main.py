@@ -48,14 +48,7 @@ st.sidebar.image(tuguIcon)
 uploaded_files = st.sidebar.file_uploader("Choose file", type="xlsx")
 @st.cache_data(ttl=(60*60*24))
 def get_data_from_excel(uploaded_files):
-    df = pd.read_excel(
-        io=uploaded_files,
-        # engine="openpyxl",
-        # sheet_name="Sales",
-        # skiprows=3,
-        # usecols="B:R",
-        # nrows=1000,
-    )
+    df = pd.read_excel(uploaded_files)
     df['Month'] = df['Order_Date'].dt.strftime('%B')
     df['Order_Date'] = pd.to_datetime(df['Order_Date'])
     df = df.sort_values('Order_Date')
